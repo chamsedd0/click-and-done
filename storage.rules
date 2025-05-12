@@ -1,0 +1,43 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Base rule - deny by default
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+    
+    // Allow users to read and upload their own files
+    match /files/{requestId}/{fileName} {
+      // Allow read if authenticated and user is either owner, collaborator, or admin
+      allow read: if request.auth != null &&
+        (request.auth.uid == resource.metadata.userId ||
+        request.auth.token.role == 'admin' ||
+        resource.metadata.collaboratorIds.hasAny([request.auth.uid]));
+      
+      // Allow create if authenticated user includes required metadata
+      allow create: if request.auth != null &&
+        request.resource.size < 10 * 1024 * 1024 && // 10MB max
+        request.resource.contentType.matches('image/.*|application/pdf|text/.*|application/msword|application/vnd.openxmlformats-officedocument.*') &&
+        request.resource.metadata.userId == request.auth.uid &&
+        request.resource.metadata.requestId is string &&
+        request.resource.metadata.fileName is string &&
+        request.resource.metadata.fileType is string;
+      
+      // Only admin or the original uploader can delete files
+      allow delete: if request.auth != null &&
+        (request.auth.uid == resource.metadata.userId ||
+        request.auth.token.role == 'admin');
+    }
+    
+    // Allow user profile images
+    match /profileImages/{userId}/{fileName} {
+      allow read: if true; // Anyone can view profile images
+      allow create, update: if request.auth != null && 
+        request.auth.uid == userId &&
+        request.resource.size < 5 * 1024 * 1024 && // 5MB max
+        request.resource.contentType.matches('image/.*');
+      allow delete: if request.auth != null && 
+        (request.auth.uid == userId || request.auth.token.role == 'admin');
+    }
+  }
+} 
