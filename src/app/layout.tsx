@@ -3,7 +3,7 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
-import { AuthProvider } from "@/components/providers/AuthProvider";
+import { AuthProvider } from "@/components/providers/auth-provider";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ToastProvider } from "@/components/ui";

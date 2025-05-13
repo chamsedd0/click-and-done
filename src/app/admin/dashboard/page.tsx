@@ -235,266 +235,269 @@ export default function AdminDashboardPage() {
   
   return (
     <AdminRoute>
-      <div className="container py-8 space-y-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-            <p className="text-muted-foreground">
-              Manage all website requests and assign admins
-            </p>
-          </div>
-        </div>
-        
-        <div className="grid gap-6">
-          {/* Filters */}
-          <Card>
-            <CardContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search requests..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9"
-                  />
-                </div>
-                
-                <Select value={filter} onValueChange={setFilter}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Filter by status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">All Statuses</SelectItem>
-                    <SelectItem value="draft">Draft</SelectItem>
-                    <SelectItem value="submitted">Submitted</SelectItem>
-                    <SelectItem value="in_progress">In Progress</SelectItem>
-                    <SelectItem value="review">Review</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                  </SelectContent>
-                </Select>
-                
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Sort by" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="newest">Newest First</SelectItem>
-                    <SelectItem value="oldest">Oldest First</SelectItem>
-                    <SelectItem value="title">Title A-Z</SelectItem>
-                    <SelectItem value="progress">Progress</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {(filter !== "all" || searchQuery.trim() || sortBy !== "newest") && (
-                <div className="mt-4 flex justify-end">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={clearFilters}
-                    className="text-muted-foreground"
-                  >
-                    <FilterX className="h-4 w-4 mr-2" />
-                    Clear Filters
-                  </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          
-          {/* Request list */}
-          {isLoading ? (
-            <div className="flex justify-center items-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex flex-col items-center justify-center min-h-[80vh] py-8">
+        <div className="w-full max-w-5xl space-y-8 mx-auto">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold">Admin Dashboard</h1>
+              <p className="text-muted-foreground">
+                Manage all website requests and assign admins
+              </p>
             </div>
-          ) : filteredRequests.length === 0 ? (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-                <div className="rounded-full bg-muted p-6">
-                  <FileText className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <div className="space-y-8">
+            <div className="w-full max-w-3xl mx-auto">
+              {/* Filters */}
+              <Card className="shadow-lg rounded-xl">
+                <CardContent className="pt-8 pb-6 px-6">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="relative">
+                      <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        placeholder="Search requests..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-9"
+                      />
+                    </div>
+                    
+                    <Select value={filter} onValueChange={setFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Filter by status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Statuses</SelectItem>
+                        <SelectItem value="draft">Draft</SelectItem>
+                        <SelectItem value="submitted">Submitted</SelectItem>
+                        <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="review">Review</SelectItem>
+                        <SelectItem value="completed">Completed</SelectItem>
+                        <SelectItem value="cancelled">Cancelled</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    
+                    <Select value={sortBy} onValueChange={setSortBy}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Sort by" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="newest">Newest First</SelectItem>
+                        <SelectItem value="oldest">Oldest First</SelectItem>
+                        <SelectItem value="title">Title A-Z</SelectItem>
+                        <SelectItem value="progress">Progress</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {(filter !== "all" || searchQuery.trim() || sortBy !== "newest") && (
+                    <div className="mt-4 flex justify-end">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={clearFilters}
+                        className="text-muted-foreground"
+                      >
+                        <FilterX className="h-4 w-4 mr-2" />
+                        Clear Filters
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+            <div className="w-full max-w-3xl mx-auto">
+              {/* Request list */}
+              {isLoading ? (
+                <div className="flex justify-center items-center py-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
-                <h3 className="text-xl font-medium">No requests found</h3>
-                <p className="text-muted-foreground text-center max-w-md">
-                  {requests.length === 0
-                    ? "There are no website requests in the system."
-                    : "No requests match your current filters. Try adjusting your search or filter criteria."}
-                </p>
-                
-                {requests.length > 0 && (
-                  <Button variant="outline" onClick={clearFilters}>
-                    <FilterX className="h-4 w-4 mr-2" />
-                    Clear Filters
-                  </Button>
-                )}
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardContent className="pt-6 px-0">
-                <div className="overflow-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Client</TableHead>
-                        <TableHead>Assigned Admin</TableHead>
-                        <TableHead>Last Updated</TableHead>
-                        <TableHead>Progress</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredRequests.map((request) => (
-                        <TableRow key={request.id}>
-                          <TableCell className="font-medium">
-                            <Link 
-                              href={`/admin/requests/${request.id}`}
-                              className="hover:underline"
-                            >
-                              {request.title}
-                            </Link>
-                          </TableCell>
-                          <TableCell>
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <div className="cursor-pointer">
-                                  {getStatusBadge(request.status)}
-                                </div>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Update Status</DialogTitle>
-                                  <DialogDescription>
-                                    Change the status of "{request.title}"
-                                  </DialogDescription>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                  <div className="grid grid-cols-2 gap-2">
-                                    <Button
-                                      variant={request.status === "submitted" ? "default" : "outline"}
-                                      onClick={() => handleStatusChange(request.id, "submitted")}
-                                      disabled={isUpdatingStatus}
-                                    >
-                                      <FileText className="h-4 w-4 mr-2" />
-                                      Submitted
-                                    </Button>
-                                    <Button
-                                      variant={request.status === "in_progress" ? "default" : "outline"}
-                                      onClick={() => handleStatusChange(request.id, "in_progress")}
-                                      disabled={isUpdatingStatus}
-                                    >
-                                      <RefreshCw className="h-4 w-4 mr-2" />
-                                      In Progress
-                                    </Button>
-                                    <Button
-                                      variant={request.status === "review" ? "default" : "outline"}
-                                      onClick={() => handleStatusChange(request.id, "review")}
-                                      disabled={isUpdatingStatus}
-                                    >
-                                      <FileText className="h-4 w-4 mr-2" />
-                                      Review
-                                    </Button>
-                                    <Button
-                                      variant={request.status === "completed" ? "default" : "outline"}
-                                      onClick={() => handleStatusChange(request.id, "completed")}
-                                      disabled={isUpdatingStatus}
-                                      className={request.status === "completed" ? "bg-green-600" : ""}
-                                    >
-                                      <CheckCircle className="h-4 w-4 mr-2" />
-                                      Completed
-                                    </Button>
-                                    <Button
-                                      variant={request.status === "cancelled" ? "destructive" : "outline"}
-                                      onClick={() => handleStatusChange(request.id, "cancelled")}
-                                      disabled={isUpdatingStatus}
-                                      className="col-span-2"
-                                    >
-                                      <X className="h-4 w-4 mr-2" />
-                                      Cancelled
-                                    </Button>
-                                  </div>
-                                </div>
-                                <DialogFooter>
-                                  {isUpdatingStatus && (
-                                    <div className="flex items-center text-muted-foreground">
-                                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                      Updating...
+              ) : filteredRequests.length === 0 ? (
+                <Card className="shadow-lg rounded-xl">
+                  <CardContent className="flex flex-col items-center justify-center py-20 space-y-6">
+                    <div className="rounded-full bg-muted p-8">
+                      <FileText className="h-12 w-12 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-2xl font-semibold">No requests found</h3>
+                    <p className="text-muted-foreground text-center max-w-md text-lg">
+                      {requests.length === 0
+                        ? "There are no website requests in the system."
+                        : "No requests match your current filters. Try adjusting your search or filter criteria."}
+                    </p>
+                    {requests.length > 0 && (
+                      <Button variant="outline" onClick={clearFilters}>
+                        <FilterX className="h-4 w-4 mr-2" />
+                        Clear Filters
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card className="shadow-lg rounded-xl">
+                  <CardContent className="pt-8 pb-6 px-6">
+                    <div className="overflow-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead>Title</TableHead>
+                            <TableHead>Status</TableHead>
+                            <TableHead>Client</TableHead>
+                            <TableHead>Assigned Admin</TableHead>
+                            <TableHead>Last Updated</TableHead>
+                            <TableHead>Progress</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {filteredRequests.map((request) => (
+                            <TableRow key={request.id}>
+                              <TableCell className="font-medium">
+                                <Link 
+                                  href={`/admin/requests/${request.id}`}
+                                  className="hover:underline"
+                                >
+                                  {request.title}
+                                </Link>
+                              </TableCell>
+                              <TableCell>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <div className="cursor-pointer">
+                                      {getStatusBadge(request.status)}
                                     </div>
-                                  )}
-                                </DialogFooter>
-                              </DialogContent>
-                            </Dialog>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-6 w-6">
-                                <AvatarFallback>
-                                  {request.userId.charAt(0).toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <span className="text-xs truncate max-w-[120px]">
-                                {request.userId}
-                              </span>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {request.assignedAdminId ? (
-                              <div className="flex items-center gap-2">
-                                <Avatar className="h-6 w-6">
-                                  <AvatarFallback>
-                                    {request.assignedAdminId.charAt(0).toUpperCase()}
-                                  </AvatarFallback>
-                                </Avatar>
-                                <span className="text-xs truncate max-w-[120px]">
-                                  {user?.uid === request.assignedAdminId ? "You" : request.assignedAdminId}
-                                </span>
-                              </div>
-                            ) : (
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => handleSelfAssign(request.id)}
-                                disabled={isAssigning}
-                              >
-                                {isAssigning ? (
-                                  <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                  </DialogTrigger>
+                                  <DialogContent>
+                                    <DialogHeader>
+                                      <DialogTitle>Update Status</DialogTitle>
+                                      <DialogDescription>
+                                        Change the status of "{request.title}"
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <div className="grid gap-4 py-4">
+                                      <div className="grid grid-cols-2 gap-2">
+                                        <Button
+                                          variant={request.status === "submitted" ? "default" : "outline"}
+                                          onClick={() => handleStatusChange(request.id, "submitted")}
+                                          disabled={isUpdatingStatus}
+                                        >
+                                          <FileText className="h-4 w-4 mr-2" />
+                                          Submitted
+                                        </Button>
+                                        <Button
+                                          variant={request.status === "in_progress" ? "default" : "outline"}
+                                          onClick={() => handleStatusChange(request.id, "in_progress")}
+                                          disabled={isUpdatingStatus}
+                                        >
+                                          <RefreshCw className="h-4 w-4 mr-2" />
+                                          In Progress
+                                        </Button>
+                                        <Button
+                                          variant={request.status === "review" ? "default" : "outline"}
+                                          onClick={() => handleStatusChange(request.id, "review")}
+                                          disabled={isUpdatingStatus}
+                                        >
+                                          <FileText className="h-4 w-4 mr-2" />
+                                          Review
+                                        </Button>
+                                        <Button
+                                          variant={request.status === "completed" ? "default" : "outline"}
+                                          onClick={() => handleStatusChange(request.id, "completed")}
+                                          disabled={isUpdatingStatus}
+                                          className={request.status === "completed" ? "bg-green-600" : ""}
+                                        >
+                                          <CheckCircle className="h-4 w-4 mr-2" />
+                                          Completed
+                                        </Button>
+                                        <Button
+                                          variant={request.status === "cancelled" ? "destructive" : "outline"}
+                                          onClick={() => handleStatusChange(request.id, "cancelled")}
+                                          disabled={isUpdatingStatus}
+                                          className="col-span-2"
+                                        >
+                                          <X className="h-4 w-4 mr-2" />
+                                          Cancelled
+                                        </Button>
+                                      </div>
+                                    </div>
+                                    <DialogFooter>
+                                      {isUpdatingStatus && (
+                                        <div className="flex items-center text-muted-foreground">
+                                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                          Updating...
+                                        </div>
+                                      )}
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <Avatar className="h-6 w-6">
+                                    <AvatarFallback>
+                                      {request.userId.charAt(0).toUpperCase()}
+                                    </AvatarFallback>
+                                  </Avatar>
+                                  <span className="text-xs truncate max-w-[120px]">
+                                    {request.userId}
+                                  </span>
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                {request.assignedAdminId ? (
+                                  <div className="flex items-center gap-2">
+                                    <Avatar className="h-6 w-6">
+                                      <AvatarFallback>
+                                        {request.assignedAdminId.charAt(0).toUpperCase()}
+                                      </AvatarFallback>
+                                    </Avatar>
+                                    <span className="text-xs truncate max-w-[120px]">
+                                      {user?.uid === request.assignedAdminId ? "You" : request.assignedAdminId}
+                                    </span>
+                                  </div>
                                 ) : (
-                                  <UserCheck className="h-3 w-3 mr-1" />
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm"
+                                    onClick={() => handleSelfAssign(request.id)}
+                                    disabled={isAssigning}
+                                  >
+                                    {isAssigning ? (
+                                      <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                                    ) : (
+                                      <UserCheck className="h-3 w-3 mr-1" />
+                                    )}
+                                    Assign Self
+                                  </Button>
                                 )}
-                                Assign Self
-                              </Button>
-                            )}
-                          </TableCell>
-                          <TableCell>{formatDate(request.updatedAt)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <div className="w-full bg-muted rounded-full h-2">
-                                <div 
-                                  className="bg-primary h-2 rounded-full" 
-                                  style={{ width: `${request.progress}%` }}
-                                ></div>
-                              </div>
-                              <span className="text-xs">{request.progress}%</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button variant="outline" size="sm" asChild>
-                              <Link href={`/admin/requests/${request.id}`}>
-                                View/Edit
-                              </Link>
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                              </TableCell>
+                              <TableCell>{formatDate(request.updatedAt)}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <div className="w-full bg-muted rounded-full h-2">
+                                    <div 
+                                      className="bg-primary h-2 rounded-full" 
+                                      style={{ width: `${request.progress}%` }}
+                                    ></div>
+                                  </div>
+                                  <span className="text-xs">{request.progress}%</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <Button variant="outline" size="sm" asChild>
+                                  <Link href={`/admin/requests/${request.id}`}>
+                                    View/Edit
+                                  </Link>
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </AdminRoute>

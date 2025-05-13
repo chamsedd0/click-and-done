@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { useAuthStore } from "@/lib/store/authStore";
-import { signOut } from "@/lib/services/auth";
+import { useAuth } from "@/components/providers/auth-provider";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 import {
   Bell,
   LogOut,
@@ -33,7 +34,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui";
 
 export function Navbar() {
-  const { user } = useAuthStore();
+  const { user } = useAuth();
   const { theme, setTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -42,7 +43,7 @@ export function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await signOut();
+      await signOut(auth);
       router.push("/login");
     } catch (error) {
       console.error("Error signing out:", error);

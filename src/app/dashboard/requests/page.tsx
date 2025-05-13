@@ -14,7 +14,8 @@ import {
   RefreshCw,
   ArrowUpDown,
   Eye,
-  Calendar
+  Calendar,
+  MessageSquare
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -101,7 +102,10 @@ export default function RequestsPage() {
     <div className="space-y-6 container mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-gradient-to-r from-primary/5 to-primary/10 p-6 rounded-lg">
         <div>
-          <h1 className="text-3xl font-bold">My Requests</h1>
+          <h1 className="text-4xl font-extrabold mb-6 text-text flex items-center gap-3">
+            <FileText className="h-8 w-8 text-primary/90" />
+            My Requests
+          </h1>
           <p className="text-muted-foreground mt-1">
             Manage and track your website requests
           </p>
@@ -115,9 +119,9 @@ export default function RequestsPage() {
         </Link>
       </div>
 
-      <Card className="border shadow-sm">
+      <Card className="border-0 shadow-lg rounded-2xl bg-gradient-to-r from-[#60a5fa] via-[#6366f1] to-[#a78bfa] text-white mb-8">
         <CardHeader className="pb-2">
-          <CardTitle>Filter Requests</CardTitle>
+          <CardTitle className="text-2xl font-bold">Filter Requests</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -195,7 +199,7 @@ export default function RequestsPage() {
           {isLoading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({ length: 6 }).map((_, i) => (
-                <Card key={i} className="overflow-hidden">
+                <Card key={i} className="overflow-hidden bg-surface/80 dark:bg-[#181A20]/80 shadow-xl rounded-2xl border border-border group">
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-start">
                       <Skeleton className="h-6 w-24" />
@@ -228,46 +232,32 @@ export default function RequestsPage() {
           ) : filteredRequests.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredRequests.map((request) => (
-                <Card key={request.id} className="overflow-hidden">
+                <Card key={request.id} className="overflow-hidden bg-surface/80 dark:bg-[#181A20]/80 shadow-xl rounded-2xl border border-border group">
                   <CardHeader className="pb-2">
                     <div className="flex justify-between items-start">
-                      <StatusBadge status={request.status} />
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(request.createdAt).toLocaleDateString()}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <FileText className="h-6 w-6 text-accent" />
+                        <h3 className="text-xl font-bold text-text group-hover:text-primary transition-colors line-clamp-1">{request.title}</h3>
+                      </div>
+                      <StatusBadge status={request.status} className="text-base px-4 py-1 rounded-full font-semibold shadow-md" />
                     </div>
-                    <h3 className="text-lg font-semibold mt-2 line-clamp-1">{request.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
-                      {request.description}
-                    </p>
+                    <p className="text-base text-muted-foreground line-clamp-2 mt-1">{request.description}</p>
                   </CardHeader>
                   <CardContent className="pb-2">
-                    <div className="space-y-3">
-                      <div className="space-y-1">
-                        <div className="flex justify-between text-xs">
-                          <span className="text-muted-foreground">Progress</span>
-                          <span>{request.progress || 0}%</span>
-                        </div>
-                        <div className="h-2 bg-muted rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-primary transition-all duration-300"
-                            style={{ width: `${request.progress || 0}%` }}
-                          />
-                        </div>
-                      </div>
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-muted-foreground">
-                          {request.estimatedHours ? `${request.estimatedHours} hours` : 'Not estimated'}
-                        </span>
-                        <span className="font-medium">
-                          {request.budget ? `$${request.budget}` : 'No budget set'}
-                        </span>
-                      </div>
+                    <div className="flex justify-between items-center text-sm mb-2">
+                      <span className="text-muted-foreground font-medium flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        {new Date(request.createdAt).toLocaleDateString()}
+                      </span>
+                      <span className="font-bold text-lg text-success">{request.budget ? `$${request.budget}` : 'No budget set'}</span>
+                    </div>
+                    <div className="h-2 bg-muted/20 rounded-full overflow-hidden mt-2">
+                      <div className="h-full bg-gradient-to-r from-primary via-accent to-success transition-all duration-300" style={{ width: `${request.progress || 0}%` }} />
                     </div>
                   </CardContent>
-                  <CardFooter className="pt-2 border-t">
+                  <CardFooter className="pt-2 border-t border-border">
                     <Link href={`/dashboard/requests/${request.id}`} className="w-full">
-                      <Button variant="outline" className="w-full">
+                      <Button variant="outline" className="w-full rounded-lg font-semibold group-hover:bg-primary/10 transition-colors">
                         <Eye className="h-4 w-4 mr-2" />
                         View Details
                       </Button>
@@ -278,10 +268,10 @@ export default function RequestsPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center text-center py-12">
-              <div className="rounded-full bg-muted/20 p-6 mb-4">
-                <FileText className="h-12 w-12 text-muted-foreground/30" />
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-muted/10 mb-4">
+                <FileText className="h-8 w-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-medium">No requests found</h3>
+              <h3 className="text-2xl font-bold">No requests found</h3>
               <p className="text-muted-foreground mt-2 max-w-md mb-6">
                 {requests.length === 0
                   ? "You haven't created any website requests yet. Get started by creating a new request."
@@ -307,7 +297,7 @@ export default function RequestsPage() {
 
         {/* List View Content */}
         <TabsContent value="list" className="mt-6">
-          <Card>
+          <Card className="bg-surface/90 dark:bg-[#181A20] shadow-xl rounded-2xl border border-border group">
             {isLoading ? (
               <div className="divide-y">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -332,34 +322,31 @@ export default function RequestsPage() {
             ) : filteredRequests.length > 0 ? (
               <div className="divide-y">
                 {filteredRequests.map((request, index) => (
-                  <div key={index} className="p-4 flex flex-col md:flex-row md:items-center gap-4">
+                  <div key={index} className="p-4 flex flex-col md:flex-row md:items-center gap-4 bg-surface/80 dark:bg-[#181A20]/80 shadow-xl rounded-2xl border border-border group mb-4">
                     <div className="flex-1 min-w-0">
-                      <div className="flex justify-between mb-1">
-                        <h3 className="text-lg font-semibold line-clamp-1">{request.title}</h3>
-                        <StatusBadge status={request.status} />
+                      <div className="flex justify-between mb-1 items-center">
+                        <div className="flex items-center gap-2">
+                          <FileText className="h-6 w-6 text-accent" />
+                          <h3 className="text-xl font-bold line-clamp-1 group-hover:text-primary transition-colors">{request.title}</h3>
+                        </div>
+                        <StatusBadge status={request.status} className="text-base px-4 py-1 rounded-full font-semibold shadow-md" />
                       </div>
-                      <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
-                        {request.description}
-                      </p>
-                      <div className="flex flex-wrap gap-2 text-sm">
-                        <span className="text-muted-foreground">
-                          Created {new Date(request.createdAt).toLocaleDateString()}
+                      <p className="text-base text-muted-foreground line-clamp-1 mt-1">{request.description}</p>
+                      <div className="flex flex-wrap gap-4 text-sm mt-2">
+                        <span className="text-muted-foreground font-medium flex items-center gap-1">
+                          <Calendar className="h-4 w-4" />
+                          {new Date(request.createdAt).toLocaleDateString()}
                         </span>
-                        <span className="text-muted-foreground">•</span>
-                        <span className="text-muted-foreground">
-                          Progress: {request.progress || 0}%
-                        </span>
-                        {request.budget && (
-                          <>
-                            <span className="text-muted-foreground">•</span>
-                            <span className="font-medium">${request.budget}</span>
-                          </>
-                        )}
+                        <span className="font-bold text-lg text-success">{request.budget ? `$${request.budget}` : 'No budget set'}</span>
+                        <span className="text-muted-foreground">Progress: {request.progress || 0}%</span>
+                      </div>
+                      <div className="h-2 bg-muted/20 rounded-full overflow-hidden mt-2">
+                        <div className="h-full bg-gradient-to-r from-primary via-accent to-success transition-all duration-300" style={{ width: `${request.progress || 0}%` }} />
                       </div>
                     </div>
-                    <div className="md:w-32 flex justify-end">
+                    <div className="md:w-32 flex justify-end items-center">
                       <Link href={`/dashboard/requests/${request.id}`}>
-                        <Button variant="outline" size="sm">
+                        <Button variant="outline" size="sm" className="rounded-lg font-semibold group-hover:bg-primary/10 transition-colors">
                           <Eye className="h-4 w-4 mr-2" />
                           View
                         </Button>
@@ -370,10 +357,10 @@ export default function RequestsPage() {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center text-center py-12">
-                <div className="rounded-full bg-muted/20 p-6 mb-4">
-                  <FileText className="h-12 w-12 text-muted-foreground/30" />
+                <div className="flex items-center justify-center w-16 h-16 rounded-full bg-muted/10 mb-4">
+                  <FileText className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <h3 className="text-xl font-medium">No requests found</h3>
+                <h3 className="text-2xl font-bold">No requests found</h3>
                 <p className="text-muted-foreground mt-2 max-w-md mb-6">
                   {requests.length === 0
                     ? "You haven't created any website requests yet. Get started by creating a new request."
@@ -403,7 +390,7 @@ export default function RequestsPage() {
 }
 
 // Status Badge Component for Requests
-function StatusBadge({ status }: { status: string }) {
+function StatusBadge({ status, className = "" }: { status: string, className?: string }) {
   const getStatusDetails = () => {
     switch (status) {
       case "draft":
@@ -423,10 +410,10 @@ function StatusBadge({ status }: { status: string }) {
     }
   };
 
-  const { label, icon, className } = getStatusDetails();
+  const { label, icon, className: statusClassName } = getStatusDetails();
 
   return (
-    <Badge variant="outline" className={`flex items-center gap-1 ${className}`}>
+    <Badge variant="outline" className={`flex items-center gap-1 ${statusClassName} ${className}`}>
       {icon}
       {label}
     </Badge>

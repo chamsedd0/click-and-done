@@ -7,7 +7,7 @@ import { WebsiteRequest } from "../types/database";
  */
 export const getAllRequests = async (): Promise<WebsiteRequest[]> => {
   try {
-    const requestsCollection = collection(db, "requests");
+    const requestsCollection = collection(db, "websiteRequests");
     const snapshot = await getDocs(requestsCollection);
     
     const requests: WebsiteRequest[] = [];
@@ -41,7 +41,7 @@ export const getAllRequests = async (): Promise<WebsiteRequest[]> => {
  */
 export const assignAdminToRequest = async (requestId: string, adminId: string): Promise<void> => {
   try {
-    const requestRef = doc(db, "requests", requestId);
+    const requestRef = doc(db, "websiteRequests", requestId);
     await updateDoc(requestRef, {
       assignedAdminId: adminId,
       updatedAt: new Date()
@@ -57,7 +57,7 @@ export const assignAdminToRequest = async (requestId: string, adminId: string): 
  */
 export const updateRequestStatus = async (requestId: string, status: string, progress: number): Promise<void> => {
   try {
-    const requestRef = doc(db, "requests", requestId);
+    const requestRef = doc(db, "websiteRequests", requestId);
     await updateDoc(requestRef, {
       status,
       progress,

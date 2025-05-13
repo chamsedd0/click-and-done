@@ -100,15 +100,18 @@ export default function RequestDetailsPage({ params }: { params: Promise<{ id: s
 
   return (
     <div className="container mx-auto py-8 space-y-6">
-      <div className="flex items-center gap-4">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-        <h1 className="text-3xl font-bold">{request.title}</h1>
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-[#60a5fa] via-[#6366f1] to-[#a78bfa] p-10 mb-10 shadow-2xl flex flex-col md:flex-row justify-between items-center min-h-[120px]">
+        <div className="relative z-10 flex flex-col md:flex-row items-center gap-6 w-full md:w-auto">
+          <div className="flex items-center gap-4">
+            <FileText className="w-12 h-12 text-white/90" />
+            <h1 className="text-4xl font-extrabold text-white drop-shadow-lg whitespace-nowrap">{request.title}</h1>
+          </div>
+          <StatusBadge status={request.status} className="text-lg px-6 py-2 rounded-full font-bold shadow-md ml-0 md:ml-8" />
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <Card>
+        <Card className="bg-surface/90 dark:bg-[#181A20] shadow-xl rounded-2xl border border-border">
           <CardHeader>
             <CardTitle>Request Details</CardTitle>
           </CardHeader>
@@ -140,7 +143,7 @@ export default function RequestDetailsPage({ params }: { params: Promise<{ id: s
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-surface/90 dark:bg-[#181A20] shadow-xl rounded-2xl border border-border">
           <CardHeader>
             <CardTitle>Project Information</CardTitle>
           </CardHeader>
@@ -182,7 +185,7 @@ export default function RequestDetailsPage({ params }: { params: Promise<{ id: s
         </TabsList>
 
         <TabsContent value="overview" className="mt-6">
-          <Card>
+          <Card className="bg-surface/90 dark:bg-[#181A20] shadow-xl rounded-2xl border border-border">
             <CardHeader>
               <CardTitle>Description</CardTitle>
             </CardHeader>
@@ -195,7 +198,7 @@ export default function RequestDetailsPage({ params }: { params: Promise<{ id: s
         </TabsContent>
 
         <TabsContent value="requirements" className="mt-6">
-          <Card>
+          <Card className="bg-surface/90 dark:bg-[#181A20] shadow-xl rounded-2xl border border-border">
             <CardHeader>
               <CardTitle>Functional Requirements</CardTitle>
             </CardHeader>
@@ -214,7 +217,7 @@ export default function RequestDetailsPage({ params }: { params: Promise<{ id: s
         </TabsContent>
 
         <TabsContent value="design" className="mt-6">
-          <Card>
+          <Card className="bg-surface/90 dark:bg-[#181A20] shadow-xl rounded-2xl border border-border">
             <CardHeader>
               <CardTitle>Design Preferences</CardTitle>
             </CardHeader>
@@ -242,7 +245,7 @@ export default function RequestDetailsPage({ params }: { params: Promise<{ id: s
         </TabsContent>
 
         <TabsContent value="timeline" className="mt-6">
-          <Card>
+          <Card className="bg-surface/90 dark:bg-[#181A20] shadow-xl rounded-2xl border border-border">
             <CardHeader>
               <CardTitle>Project Timeline</CardTitle>
             </CardHeader>
